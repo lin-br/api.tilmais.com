@@ -1,0 +1,8 @@
+rootProject.name = 'api.tilmais.com'
+
+buildCache {
+    local {
+        directory = new File(rootDir, 'build-cache')
+        removeUnusedEntriesAfterDays = 7
+    }
+}
