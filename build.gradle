@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'info.solidsoft.pitest' version '1.5.1'
+    id 'jacoco'
 }
 
-group 'api.tilmais.com'
-version '0.0.0'
+project.group 'api.tilmais.com'
+project.version '0.0.0'
 
 repositories {
     mavenCentral()
@@ -28,6 +30,45 @@ java {
     }
 }
 
+pitest {
+    junit5PluginVersion = '0.12'
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+    threads = 6
+    excludedClasses = ['com.tilmais.api.domain.entities.valueobjects.*']
+}
+
 test {
     useJUnitPlatform()
+    finalizedBy = [jacocoTestReport, jacocoTestCoverageVerification]
+}
+
+jacocoTestReport {
+    dependsOn = [test]
+    reports {
+        csv.required = false
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/tilmais/api/domain/entities/valueobjects/**"
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.00
+            }
+        }
+    }
+}
+
+build {
+    dependsOn test
 }
