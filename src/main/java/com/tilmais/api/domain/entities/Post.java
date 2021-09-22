@@ -14,22 +14,22 @@ import java.util.Objects;
 
 public class Post {
 
-  @NotNull(message = "The article need the created date and it's can't be null.")
+  @NotNull(message = "The post need the created date and it's can't be null.")
   @PastOrPresent
   private final LocalDateTime created;
 
-  @NotNull(message = "Address access of the article can't be null.")
-  @NotBlank(message = "Address access of the article can't be empty.")
+  @NotNull(message = "Address access of the post can't be null.")
+  @NotBlank(message = "Address access of the post can't be empty.")
   private final String code;
 
-  @NotNull(message = "The article title can't be null.")
+  @NotNull(message = "The post title can't be null.")
   @Valid
   private final Title title;
 
-  @NotNull(message = "The article body can't be null.")
+  @NotNull(message = "The post body can't be null.")
   @Valid
   private final Body body;
-  private final List<@NotNull(message = "If an article has a comment, it can't be null.") @Valid Comment> comments;
+  private final List<@NotNull(message = "If an post has a comment, it can't be null.") @Valid Comment> comments;
 
   public Post(final String code, final Title title, final Body body) {
     this.code = code;

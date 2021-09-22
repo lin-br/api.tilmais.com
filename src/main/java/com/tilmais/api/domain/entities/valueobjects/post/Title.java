@@ -1,8 +1,9 @@
-package com.tilmais.api.domain.entities.valueobjects.articles;
+package com.tilmais.api.domain.entities.valueobjects.post;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.Objects;
 
 public class Title {
 
@@ -15,7 +16,28 @@ public class Title {
     this.text = text;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (this == o) {
+      return true;
+    }
+    Title title = (Title) o;
+    return this.text.equals(title.text);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(text);
+  }
+
   public String getText() {
     return text;
+  }
+
+  public boolean isNotEquals(Title title) {
+    return !this.equals(title);
   }
 }

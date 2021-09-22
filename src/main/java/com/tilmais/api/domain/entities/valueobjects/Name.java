@@ -32,7 +32,7 @@ public class Name {
     return this.fullName.equals(name.fullName);
   }
 
-  public boolean notEquals(Name name) {
+  public boolean isNotEquals(Name name) {
     return !this.equals(name);
   }
 
