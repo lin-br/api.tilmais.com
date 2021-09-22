@@ -3,12 +3,12 @@ package com.tilmais.api.domain.entities;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import com.tilmais.api.domain.entities.valueobjects.articles.Body;
-import com.tilmais.api.domain.entities.valueobjects.articles.Title;
+import com.tilmais.api.domain.entities.valueobjects.post.Body;
+import com.tilmais.api.domain.entities.valueobjects.post.Title;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ArticleTest {
+class PostTest {
 
   @Test
   @DisplayName("Should is same article when the other article has the same code.")
@@ -16,8 +16,8 @@ class ArticleTest {
     var title = new Title("a text");
     var body = new Body("a other text");
 
-    var article = new Article("code", title, body);
-    var articleTwo = new Article("code", title, body);
+    var article = new Post("code", title, body);
+    var articleTwo = new Post("code", title, body);
 
     assertEquals(article, articleTwo);
   }
@@ -28,8 +28,8 @@ class ArticleTest {
     var title = new Title("a text");
     var body = new Body("a other text");
 
-    var article = new Article("code", title, body);
-    var articleTwo = new Article("other code", title, body);
+    var article = new Post("code", title, body);
+    var articleTwo = new Post("other code", title, body);
 
     assertNotEquals(article, articleTwo);
   }

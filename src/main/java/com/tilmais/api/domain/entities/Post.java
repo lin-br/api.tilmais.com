@@ -1,19 +1,18 @@
 package com.tilmais.api.domain.entities;
 
-import com.tilmais.api.domain.entities.valueobjects.Comment;
-import com.tilmais.api.domain.entities.valueobjects.articles.Body;
-import com.tilmais.api.domain.entities.valueobjects.articles.Title;
+import com.tilmais.api.domain.entities.valueobjects.post.Body;
+import com.tilmais.api.domain.entities.valueobjects.post.Title;
+import com.tilmais.api.domain.tools.Time;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Article {
+public class Post {
 
   @NotNull(message = "The article need the created date and it's can't be null.")
   @PastOrPresent
@@ -21,26 +20,26 @@ public class Article {
 
   @NotNull(message = "Address access of the article can't be null.")
   @NotBlank(message = "Address access of the article can't be empty.")
-  public final String code;
+  private final String code;
 
   @NotNull(message = "The article title can't be null.")
   @Valid
-  public final Title title;
+  private final Title title;
 
   @NotNull(message = "The article body can't be null.")
   @Valid
-  public final Body body;
-  public final List<@NotNull(message = "If an article has a comment, it can't be null.") @Valid Comment> comments;
+  private final Body body;
+  private final List<@NotNull(message = "If an article has a comment, it can't be null.") @Valid Comment> comments;
 
-  public Article(final String code, final Title title, final Body body) {
+  public Post(final String code, final Title title, final Body body) {
     this.code = code;
     this.title = title;
     this.body = body;
-    this.created = LocalDateTime.now(ZoneId.of(ZoneId.SHORT_IDS.get("BET")));
+    this.created = Time.getTimeNowFromSaoPaulo();
     this.comments = new ArrayList<>();
   }
 
-  public Article(final String code, final Title title, final Body body, final LocalDateTime created) {
+  public Post(final String code, final Title title, final Body body, final LocalDateTime created) {
     this.code = code;
     this.title = title;
     this.body = body;
@@ -56,8 +55,8 @@ public class Article {
     if (this == o) {
       return true;
     }
-    Article article = (Article) o;
-    return this.code.equals(article.code);
+    Post post = (Post) o;
+    return this.code.equals(post.code);
   }
 
   @Override
