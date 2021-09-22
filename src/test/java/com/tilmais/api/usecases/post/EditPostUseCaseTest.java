@@ -9,11 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.github.javafaker.Faker;
 import com.tilmais.api.domain.entities.Post;
 import com.tilmais.api.domain.entities.exceptions.PostViolationsException;
-import com.tilmais.api.domain.entities.valueobjects.post.Body;
-import com.tilmais.api.domain.entities.valueobjects.post.Title;
+import com.tilmais.api.fake.factory.FakePostFactory;
 import com.tilmais.api.usecases.post.repository.UpdatePostRepository;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -24,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 class EditPostUseCaseTest {
 
-  private final Faker faker = new Faker();
   private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
   private EditPostUseCase useCase;
   private UpdatePostRepository repositoryMock;
@@ -38,9 +35,7 @@ class EditPostUseCaseTest {
   @Test
   @DisplayName("Should update the post if doesn't has violations.")
   void shouldUpdatePost() {
-    var title = new Title(this.faker.lorem().characters(20, 150));
-    var body = new Body(this.faker.lorem().paragraph());
-    var post = new Post(this.faker.code().gtin8(), title, body);
+    var post = FakePostFactory.makeValidFakePost();
     when(this.repositoryMock.updatePost(any(Post.class))).thenReturn(Optional.of(post));
 
     var optional = this.useCase.editPost(post);
@@ -52,7 +47,7 @@ class EditPostUseCaseTest {
   @Test
   @DisplayName("Don't should update the post if It has some violation.")
   void shouldDontUpdatePost() {
-    var post = new Post(this.faker.code().gtin8(), null, null);
+    var post = FakePostFactory.makeInvalidFakePost();
 
     assertThatThrownBy(() -> this.useCase.editPost(post))
         .isInstanceOf(PostViolationsException.class)

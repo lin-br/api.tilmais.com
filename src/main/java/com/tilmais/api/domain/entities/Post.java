@@ -1,5 +1,7 @@
 package com.tilmais.api.domain.entities;
 
+import static java.util.Objects.isNull;
+
 import com.tilmais.api.domain.entities.valueobjects.post.Body;
 import com.tilmais.api.domain.entities.valueobjects.post.Title;
 import com.tilmais.api.domain.tools.Time;
@@ -8,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,20 +33,16 @@ public class Post {
   private final Body body;
   private final List<@NotNull(message = "If an post has a comment, it can't be null.") @Valid Comment> comments;
 
-  public Post(final String code, final Title title, final Body body) {
-    this.code = code;
-    this.title = title;
-    this.body = body;
-    this.created = Time.getTimeNowFromSaoPaulo();
-    this.comments = new ArrayList<>();
-  }
-
-  public Post(final String code, final Title title, final Body body, final LocalDateTime created) {
-    this.code = code;
-    this.title = title;
-    this.body = body;
+  private Post(final LocalDateTime created,
+      final String code,
+      final Title title,
+      final Body body,
+      final List<Comment> comments) {
     this.created = created;
-    this.comments = new ArrayList<>();
+    this.code = code;
+    this.title = title;
+    this.body = body;
+    this.comments = comments;
   }
 
   @Override
@@ -82,5 +80,54 @@ public class Post {
 
   public LocalDateTime getCreated() {
     return created;
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    private LocalDateTime created;
+    private String code;
+    private Title title;
+    private Body body;
+    private List<Comment> comments;
+
+    public Builder setCreated(LocalDateTime created) {
+      this.created = created;
+      return this;
+    }
+
+    public Builder setCode(String code) {
+      this.code = code;
+      return this;
+    }
+
+    public Builder setTitle(Title title) {
+      this.title = title;
+      return this;
+    }
+
+    public Builder setBody(Body body) {
+      this.body = body;
+      return this;
+    }
+
+    public Builder setComments(List<Comment> comments) {
+      this.comments = comments;
+      return this;
+    }
+
+    public Post build() {
+      return new Post(getCreatedField(), this.code, this.title, this.body, getComments());
+    }
+
+    private LocalDateTime getCreatedField() {
+      return isNull(this.created) ? Time.getTimeNowFromSaoPaulo() : this.created;
+    }
+
+    private List<Comment> getComments() {
+      return isNull(this.comments) ? Collections.emptyList() : this.comments;
+    }
   }
 }
