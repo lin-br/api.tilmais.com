@@ -5,6 +5,9 @@ import java.time.ZoneId;
 
 public class Time {
 
+  private Time() {
+  }
+
   private final static String KEY_SAO_PAULO = "BET";
 
   public static LocalDateTime getTimeNowFromSaoPaulo() {
