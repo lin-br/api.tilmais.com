@@ -10,11 +10,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.github.javafaker.Faker;
-import com.tilmais.api.domain.entities.User;
 import com.tilmais.api.domain.entities.exceptions.UserViolationException;
-import com.tilmais.api.domain.entities.valueobjects.EmailAddress;
 import com.tilmais.api.domain.entities.valueobjects.Name;
-import com.tilmais.api.domain.entities.valueobjects.Password;
+import com.tilmais.api.fake.factory.FakeUserFactory;
 import com.tilmais.api.usecases.user.repository.UpdateUserRepository;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -39,27 +37,25 @@ class EditUserUseCaseTest {
   @Test
   @DisplayName("Should change the user name when the new name is different that user.")
   void shouldChangeUserName() {
-    var name = new Name(this.faker.name().fullName());
-    var email = new EmailAddress(this.faker.internet().safeEmailAddress());
-    var password = new Password(this.faker.internet().password());
-    var user = new User(name, email, password);
+    var user = FakeUserFactory.makeValidFakeUser();
+    var otherUser = FakeUserFactory.makeValidFakeUser(new Name("ok, the name was changed!"));
+    when(this.repositoryMock.updateUserName(anyString(), anyString())).thenReturn(Optional.of(otherUser));
 
-    var newName = new Name("ok, the name was changed!");
-    when(this.repositoryMock.updateUserName(anyString(), anyString())).thenReturn(Optional.of(new User(newName, null, null)));
-    var optional = this.useCase.changeUserName(user, newName);
+    var optional = this.useCase.changeUserName(user, otherUser.getName());
 
-    assertThat(optional).isPresent();
-    assertThat(newName.getFullName()).isEqualTo(optional.get().getName().getFullName());
+    assertThat(optional).isPresent()
+        .hasValueSatisfying(userFromOptional -> {
+          assertThat(userFromOptional.getName().getFullName()).isEqualTo(otherUser.getName().getFullName());
+          assertThat(userFromOptional.getPassword()).isNotNull();
+          assertThat(userFromOptional.getPosts()).isNotNull();
+        });
     verify(this.repositoryMock, times(1)).updateUserName(anyString(), anyString());
   }
 
   @Test
   @DisplayName("Don't should change the user name when the new full name is null.")
   void shouldDontChangeUserNameIfNewNameIsNull() {
-    var name = new Name(this.faker.name().fullName());
-    var email = new EmailAddress(this.faker.internet().safeEmailAddress());
-    var password = new Password(this.faker.internet().password());
-    var user = new User(name, email, password);
+    var user = FakeUserFactory.makeValidFakeUser();
 
     assertThatThrownBy(() -> this.useCase.changeUserName(user, new Name(null)))
         .isInstanceOf(UserViolationException.class)
@@ -69,10 +65,8 @@ class EditUserUseCaseTest {
   @Test
   @DisplayName("Don't should change the user name when the password into User is null.")
   void shouldDontChangeUserNameIfPasswordIsNull() {
-    var name = new Name(this.faker.name().fullName());
-    var email = new EmailAddress(this.faker.internet().safeEmailAddress());
-    var user = new User(name, email, null);
-    var newName = new Name("ok, the name was changed!");
+    var user = FakeUserFactory.makeInvalidFakeUserWithPasswordNull();
+    var newName = new Name("the new name");
 
     assertThatThrownBy(() -> this.useCase.changeUserName(user, newName))
         .isInstanceOf(UserViolationException.class)
@@ -83,9 +77,7 @@ class EditUserUseCaseTest {
   @DisplayName("Don't should change the user name when the parameter is the same user's name.")
   void shouldDontCallUserRepositoryWhenTheNameInParameterIsTheSameName() {
     var name = new Name(this.faker.name().fullName());
-    var email = new EmailAddress(this.faker.internet().safeEmailAddress());
-    var password = new Password(this.faker.internet().password());
-    var user = new User(name, email, password);
+    var user = FakeUserFactory.makeValidFakeUser(name);
 
     var optional = this.useCase.changeUserName(user, name);
 
