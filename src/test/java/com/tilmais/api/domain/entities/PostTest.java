@@ -44,7 +44,7 @@ class PostTest {
 
   @Test
   void shouldGetNotNullHashCode() {
-    Post post = FakePostFactory.makeValidFakePost("1");
+    var post = FakePostFactory.makeValidFakePost("1");
     assertThat(post.hashCode()).isNotNull();
   }
 }
