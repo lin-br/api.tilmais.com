@@ -1,7 +1,6 @@
 package com.tilmais.api.domain.entities;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.tilmais.api.fake.factory.FakePostFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +14,7 @@ class PostTest {
     var post = FakePostFactory.makeValidFakePost("code");
     var postTwo = FakePostFactory.makeValidFakePost("code");
 
-    assertEquals(post, postTwo);
+    assertThat(post).isEqualTo(postTwo);
   }
 
   @Test
@@ -24,6 +23,28 @@ class PostTest {
     var post = FakePostFactory.makeValidFakePost("code");
     var postTwo = FakePostFactory.makeValidFakePost("other code");
 
-    assertNotEquals(post, postTwo);
+    assertThat(post).isNotEqualTo(postTwo);
+  }
+
+  @Test
+  @DisplayName("Should is not same post when the other object is not a post.")
+  void shouldIsNotSamePostWhenOtherObjectIsNotPost() {
+    var post = FakePostFactory.makeValidFakePost("code");
+
+    assertThat(post).isNotEqualTo("postTwo");
+  }
+
+  @Test
+  @DisplayName("Should is not same post when the other object is null.")
+  void shouldIsNotSamePostWhenOtherObjectIsNull() {
+    var post = FakePostFactory.makeValidFakePost("code");
+
+    assertThat(post).isNotEqualTo(null);
+  }
+
+  @Test
+  void shouldGetNotNullHashCode() {
+    Post post = FakePostFactory.makeValidFakePost("1");
+    assertThat(post.hashCode()).isNotNull();
   }
 }
