@@ -20,6 +20,7 @@ public class FakeAnswerFactory {
         .setEmailAddress(makeValidFakeEmailAddress())
         .setName(makeValidFakeName())
         .setText(FAKER.lorem().paragraph())
+        .setCreated(Time.getTimeNowFromSaoPaulo())
         .build();
   }
 
@@ -41,6 +42,7 @@ public class FakeAnswerFactory {
         .setEmailAddress(makeValidFakeEmailAddress())
         .setName(makeValidFakeName())
         .setText(FAKER.lorem().paragraph())
+        .setCreated(Time.getTimeNowFromSaoPaulo())
         .build();
   }
 }

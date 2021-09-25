@@ -37,6 +37,8 @@ pitest {
     threads = 6
     excludedClasses = ['com.tilmais.api.domain.entities.valueobjects.*']
     targetClasses = ['com.tilmais.api.*']
+    excludedMethods = ['hashCode', 'equals']
+    failWhenNoMutations = true
 }
 
 test {
@@ -79,5 +81,5 @@ jacocoTestCoverageVerification {
 }
 
 build {
-    dependsOn test
+    dependsOn = [test, 'pitest']
 }

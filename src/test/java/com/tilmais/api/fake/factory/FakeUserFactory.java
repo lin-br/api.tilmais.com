@@ -2,6 +2,7 @@ package com.tilmais.api.fake.factory;
 
 import static com.tilmais.api.fake.factory.FakeEmailAddressFactory.makeValidFakeEmailAddress;
 import static com.tilmais.api.fake.factory.FakeNameFactory.makeValidFakeName;
+import static com.tilmais.api.fake.factory.FakePostFactory.makeValidFakePost;
 
 import com.github.javafaker.Faker;
 import com.tilmais.api.domain.entities.User;
@@ -19,7 +20,7 @@ public class FakeUserFactory {
         .setName(makeValidFakeName())
         .setEmailAddress(makeValidFakeEmailAddress())
         .setPassword(password)
-        .setPosts(Collections.emptyList())
+        .setPosts(Collections.singletonList(makeValidFakePost()))
         .build();
   }
 
@@ -37,6 +38,7 @@ public class FakeUserFactory {
         .setName(name)
         .setEmailAddress(makeValidFakeEmailAddress())
         .setPassword(password)
+        .setPosts(Collections.singletonList(makeValidFakePost()))
         .build();
   }
 }

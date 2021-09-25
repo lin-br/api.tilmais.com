@@ -3,6 +3,9 @@ package com.tilmais.api.domain.entities;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.tilmais.api.fake.factory.FakePostFactory;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -46,5 +49,15 @@ class PostTest {
   void shouldGetNotNullHashCode() {
     var post = FakePostFactory.makeValidFakePost("1");
     assertThat(post.hashCode()).isNotNull();
+  }
+
+  @Test
+  void shouldNotEqualMyBirthdayWhenMutationTestDoNegateConditional() {
+    var post = Post.newBuilder()
+        .setCreated(null)
+        .build();
+    assertThat(post.getCreated())
+        .isNotNull()
+        .isNotEqualTo(LocalDateTime.of(LocalDate.of(1993, 7, 12), LocalTime.MIDNIGHT));
   }
 }

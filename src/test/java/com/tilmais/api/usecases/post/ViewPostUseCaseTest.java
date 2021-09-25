@@ -52,7 +52,7 @@ class ViewPostUseCaseTest {
         .containsExactly(post);
     assertThat(posts.get(0))
         .satisfies(postFromList -> {
-          assertThat(postFromList.getCode()).isNotNull();
+          assertThat(postFromList.getCode()).isNotNull().isNotBlank();
           assertThat(postFromList.getCreated()).isNotNull();
           assertThat(postFromList.getTitle()).isNotNull();
           assertThat(postFromList.getBody()).isNotNull();

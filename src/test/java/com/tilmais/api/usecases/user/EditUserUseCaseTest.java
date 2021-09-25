@@ -47,7 +47,7 @@ class EditUserUseCaseTest {
         .hasValueSatisfying(userFromOptional -> {
           assertThat(userFromOptional.getName().getFullName()).isEqualTo(otherUser.getName().getFullName());
           assertThat(userFromOptional.getPassword()).isNotNull();
-          assertThat(userFromOptional.getPosts()).isNotNull();
+          assertThat(userFromOptional.getPosts()).isNotNull().isNotEmpty();
         });
     verify(this.repositoryMock, times(1)).updateUserName(anyString(), anyString());
   }
