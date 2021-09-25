@@ -42,13 +42,22 @@ class WriteCommentUseCaseTest {
   @DisplayName("Should write a comment on post.")
   void shouldWriteCommentOnPost() {
     var post = FakePostFactory.makeValidFakePost();
-    var comment = FakeCommentFactory.makeValidFakeComment();
+    var comment = FakeCommentFactory.makeFullValidFakeComment();
     when(this.repositoryMock.createCommentOnPost(any(Post.class), any(Comment.class)))
         .thenReturn(Optional.of(comment));
 
     var optional = this.useCase.writeCommentOnPost(post, comment);
 
-    assertThat(optional).isPresent();
+    assertThat(optional)
+        .isPresent()
+        .hasValueSatisfying(commentFromOptional -> {
+          assertThat(commentFromOptional.getAnswers()).isNotNull().isNotEmpty();
+          assertThat(commentFromOptional.getCreated()).isNotNull().isEqualTo(comment.getCreated());
+          assertThat(commentFromOptional.getEmailAddress()).isNotNull().isEqualTo(comment.getEmailAddress());
+          assertThat(commentFromOptional.getName()).isNotNull().isEqualTo(comment.getName());
+          assertThat(commentFromOptional.getNumber()).isNotNull().isEqualTo(comment.getNumber());
+          assertThat(commentFromOptional.getText()).isNotNull().isEqualTo(comment.getText());
+        });
     verify(this.repositoryMock, times(1)).createCommentOnPost(any(Post.class), any(Comment.class));
   }
 
@@ -56,13 +65,26 @@ class WriteCommentUseCaseTest {
   @DisplayName("Should answer a comment.")
   void shouldAnswerComment() {
     var parent = FakeCommentFactory.makeValidFakeComment();
-    var answer = FakeAnswerFactory.makeValidFakeAnswer();
+    var answer = FakeAnswerFactory.makeValidFakeAnswer(parent);
+    parent.addAnswer(answer);
     when(this.repositoryMock.createAnswer(any(Comment.class), any(Answer.class)))
         .thenReturn(Optional.of(parent));
 
     var optional = this.useCase.answerComment(parent, answer);
 
-    assertThat(optional).isPresent();
+    assertThat(optional)
+        .isPresent()
+        .hasValueSatisfying(commentFromOptional -> assertThat(commentFromOptional.getAnswers())
+            .isNotNull()
+            .isNotEmpty()
+            .containsExactly(answer)
+            .anySatisfy(answerFromOptional -> {
+              assertThat(answerFromOptional.getParent()).isEqualTo(parent);
+              assertThat(answerFromOptional.getCreated()).isEqualTo(answer.getCreated());
+              assertThat(answerFromOptional.getNumber()).isEqualTo(answer.getNumber());
+              assertThat(answerFromOptional.getText()).isEqualTo(answer.getText());
+              assertThat(answerFromOptional.getName()).isEqualTo(answer.getName());
+            }));
     verify(this.repositoryMock, times(1)).createAnswer(any(Comment.class), any(Answer.class));
   }
 

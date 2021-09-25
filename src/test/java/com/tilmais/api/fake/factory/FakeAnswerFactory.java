@@ -6,6 +6,8 @@ import static com.tilmais.api.fake.factory.FakeNameFactory.makeValidFakeName;
 
 import com.github.javafaker.Faker;
 import com.tilmais.api.domain.entities.Answer;
+import com.tilmais.api.domain.entities.Comment;
+import com.tilmais.api.domain.tools.Time;
 
 public class FakeAnswerFactory {
 
@@ -18,6 +20,17 @@ public class FakeAnswerFactory {
         .setEmailAddress(makeValidFakeEmailAddress())
         .setName(makeValidFakeName())
         .setText(FAKER.lorem().paragraph())
+        .build();
+  }
+
+  public static Answer makeValidFakeAnswer(final Comment comment) {
+    return Answer.newBuilder()
+        .setParent(comment)
+        .setNumber(FAKER.number().randomDigitNotZero())
+        .setEmailAddress(makeValidFakeEmailAddress())
+        .setName(makeValidFakeName())
+        .setText(FAKER.lorem().paragraph())
+        .setCreated(Time.getTimeNowFromSaoPaulo())
         .build();
   }
 

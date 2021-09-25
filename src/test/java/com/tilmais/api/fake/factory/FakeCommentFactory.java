@@ -5,8 +5,7 @@ import static com.tilmais.api.fake.factory.FakeNameFactory.makeValidFakeName;
 
 import com.github.javafaker.Faker;
 import com.tilmais.api.domain.entities.Comment;
-import com.tilmais.api.domain.entities.valueobjects.EmailAddress;
-import com.tilmais.api.domain.entities.valueobjects.Name;
+import com.tilmais.api.domain.tools.Time;
 
 public class FakeCommentFactory {
 
@@ -19,6 +18,21 @@ public class FakeCommentFactory {
         .setName(makeValidFakeName())
         .setText(FAKER.lorem().paragraph())
         .build();
+  }
+
+  public static Comment makeFullValidFakeComment() {
+    var comment = Comment.newBuilder()
+        .setNumber(FAKER.number().randomDigitNotZero())
+        .setEmailAddress(makeValidFakeEmailAddress())
+        .setName(makeValidFakeName())
+        .setText(FAKER.lorem().paragraph())
+        .setCreated(Time.getTimeNowFromSaoPaulo())
+        .build();
+
+    var answer = FakeAnswerFactory.makeValidFakeAnswer(comment);
+
+    comment.addAnswer(answer);
+    return comment;
   }
 
   public static Comment makeInvalidFakeComment() {

@@ -7,7 +7,7 @@ import com.tilmais.api.domain.entities.valueobjects.Name;
 import com.tilmais.api.domain.entities.valueobjects.Password;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -105,7 +105,7 @@ public class User {
     }
 
     private List<Post> makePosts() {
-      return isNull(this.posts) ? Collections.emptyList() : this.posts;
+      return isNull(this.posts) ? new ArrayList<>() : this.posts;
     }
   }
 }

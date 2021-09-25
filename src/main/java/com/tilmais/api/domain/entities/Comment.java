@@ -9,21 +9,19 @@ import com.tilmais.api.domain.tools.Time;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comment extends Interaction {
 
-  private final List<@NotNull(message = "If a comment has an answer, it can't be null.") @Valid Answer> answers;
+  private final List<@NotNull(message = "If a comment has an answer, it can't be null.") @Valid Answer> answers = new ArrayList<>();
 
   private Comment(final EmailAddress emailAddress,
       final Name name,
       final LocalDateTime created,
       final String text,
-      final Integer number,
-      final List<Answer> answers) {
+      final Integer number) {
     super(emailAddress, name, created, text, number);
-    this.answers = answers;
   }
 
   public static Builder newBuilder() {
@@ -45,7 +43,6 @@ public class Comment extends Interaction {
     private LocalDateTime created;
     private String text;
     private Integer number;
-    private List<Answer> answers;
 
     public Builder setCreated(LocalDateTime created) {
       this.created = created;
@@ -72,17 +69,8 @@ public class Comment extends Interaction {
       return this;
     }
 
-    public Builder setAnswers(List<Answer> answers) {
-      this.answers = answers;
-      return this;
-    }
-
     public Comment build() {
-      return new Comment(this.emailAddress, this.name, getCreatedField(), this.text, this.number, getAnswers());
-    }
-
-    private List<Answer> getAnswers() {
-      return isNull(this.answers) ? Collections.emptyList() : this.answers;
+      return new Comment(this.emailAddress, this.name, getCreatedField(), this.text, this.number);
     }
 
     private LocalDateTime getCreatedField() {
