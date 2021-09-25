@@ -1,4 +1,4 @@
-rootProject.name = 'api.tilmais.com'
+rootProject.name = 'Tilmais API'
 
 buildCache {
     local {
