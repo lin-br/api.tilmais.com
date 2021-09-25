@@ -32,10 +32,11 @@ java {
 
 pitest {
     junit5PluginVersion = '0.12'
-    outputFormats = ['XML', 'HTML']
+    outputFormats = ['HTML', 'XML']
     timestampedReports = false
     threads = 6
     excludedClasses = ['com.tilmais.api.domain.entities.valueobjects.*']
+    targetClasses = ['com.tilmais.api.*']
 }
 
 test {
@@ -60,10 +61,18 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude:  [
+                    "com/tilmais/api/domain/entities/valueobjects/**"
+            ])
+        }))
+    }
+
     violationRules {
         rule {
             limit {
-                minimum = 1.00
+                minimum = 0.90
             }
         }
     }
